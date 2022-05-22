@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>api</name>
+    </assembly>
+    <members>
+        <member name="M:api.Controllers.AnticipationController.PendingAnalysis">
+            <summary>
+            Visualização de antecipações pendentes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:api.Controllers.AnticipationController.Records(api.Models.ViewModel.AnalysisStatusModel)">
+            <summary>
+            List Anticipations by status
+            </summary>
+            <param name="status"> Pending = 0, InAnalysis = 1, Finished = 2 </param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

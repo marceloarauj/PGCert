@@ -9,8 +9,8 @@ namespace api.Models.EntityModel
         {
             entity.ToTable(nameof(Transaction));
 
-            entity.HasKey(transaction => transaction.NSU);
-            entity.Property(transaction => transaction.NSU).ValueGeneratedNever();
+            entity.HasKey(transaction => transaction.Nsu);
+            entity.Property(transaction => transaction.Nsu).ValueGeneratedNever();
 
             entity.Property(transaction => transaction.Date).HasColumnName("DataTransacao");
             entity.Property(transaction => transaction.Approval).HasColumnName("DataAprovacao");
@@ -25,7 +25,8 @@ namespace api.Models.EntityModel
 
 
             entity.HasMany(transaction => transaction.Installments)
-                  .WithOne(installment => installment.Transaction);
+                  .WithOne(installment => installment.Transaction)
+                  .HasForeignKey(installment => installment.Nsu);
         }
     }
 }

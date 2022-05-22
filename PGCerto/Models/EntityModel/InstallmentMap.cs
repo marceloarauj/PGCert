@@ -12,9 +12,16 @@ namespace api.Models.EntityModel
             entity.HasKey(installment => installment.Id);
             entity.Property(installment => installment.Id).ValueGeneratedOnAdd();
 
+            entity.Property(installment => installment.BruteValue).HasColumnName("ValorBruto");
+            entity.Property(installment => installment.NetValue).HasColumnName("ValorLiquido");
+            entity.Property(installment => installment.Receivement).HasColumnName("DataRecebimento");
+            entity.Property(installment => installment.InstallmentNumber).HasColumnName("NumeroParcela");
+            entity.Property(installment => installment.PassedOn).HasColumnName("DataRepasse");
+            entity.Property(installment => installment.AntecipatedValue).HasColumnName("ValorAntecipado");
+
             entity.HasOne(installment => installment.Transaction)
                   .WithMany(transaction => transaction.Installments)
-                  .HasForeignKey(installment => installment.NSU);
+                  .HasForeignKey(installment => installment.Nsu);
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using api.Models.EntityModel;
+using api.Models.ResultModel;
+using api.Models.ServiceModel;
+using api.Models.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -7,16 +11,34 @@ namespace api.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        [HttpPost("payment")]
-        public IActionResult Payment()
+        private readonly TransactionService _transactionService;
+        private readonly AppDbContext _context;
+
+        public TransactionController(TransactionService transactionService, AppDbContext context)
         {
-            return null;
+            _transactionService = transactionService;
+            _context = context;
         }
 
-        [HttpGet("search/{id}")]
-        public IActionResult Search(int id)
+        [HttpPost("payment")]
+        public IActionResult Payment(TransactionModel model)
         {
-            return null;
+            return _transactionService.CreateTransaction(model);
+        }
+
+        [HttpGet("search/{nsu}")]
+        public IActionResult Search(string nsu)
+        {
+            var transaction = _context.Transactions.WhereId(nsu);
+
+            if(transaction == null)
+                return new TransactionNotFoundJson();
+
+            transaction.Installments = _context.Installments
+                                                .WhereNsu(nsu)
+                                                .ToList();
+
+            return new TransactionJson(transaction);
         }
     }
 }

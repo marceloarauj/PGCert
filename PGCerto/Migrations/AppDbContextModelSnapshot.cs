@@ -22,6 +22,69 @@ namespace api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("api.Models.EntityModel.Anticipation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<decimal>("AntecipatedValue")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ValorAntecipado");
+
+                    b.Property<DateTime?>("FinishedAnalysisDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DataFimAnalise");
+
+                    b.Property<decimal>("RequestedValue")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ValorSolicitado");
+
+                    b.Property<DateTime>("SolicitationDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DataSolicitacao");
+
+                    b.Property<DateTime?>("StartAnalysisDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DataInicioAnalise");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Anticipation", (string)null);
+                });
+
+            modelBuilder.Entity("api.Models.EntityModel.AnticipationTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AnticipationId")
+                        .HasColumnType("int")
+                        .HasColumnName("AntecipacaoId");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionNsu")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Nsu");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnticipationId");
+
+                    b.ToTable("AnticipationTransaction", (string)null);
+                });
+
             modelBuilder.Entity("api.Models.EntityModel.Installment", b =>
                 {
                     b.Property<int>("Id")
@@ -31,26 +94,32 @@ namespace api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<decimal?>("AntecipatedValue")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ValorAntecipado");
 
                     b.Property<decimal>("BruteValue")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ValorBruto");
 
                     b.Property<int>("InstallmentNumber")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("NumeroParcela");
 
                     b.Property<string>("NSU")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("NetValue")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ValorLiquido");
 
                     b.Property<DateTime?>("PassedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DataRepasse");
 
                     b.Property<DateTime>("Receivement")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DataRecebimento");
 
                     b.HasKey("Id");
 
@@ -61,43 +130,63 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.EntityModel.Transaction", b =>
                 {
-                    b.Property<string>("NSU")
+                    b.Property<string>("Nsu")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AcquirerConfirmation")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("ConfirmacaoAdquirinte");
 
-                    b.Property<bool>("Anticipation")
-                        .HasColumnType("bit");
+                    b.Property<bool?>("Anticipation")
+                        .HasColumnType("bit")
+                        .HasColumnName("Antecipado");
 
                     b.Property<DateTime?>("Approval")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DataAprovacao");
 
                     b.Property<decimal>("BruteValue")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ValorBruto");
 
                     b.Property<string>("CreditCardLastNumbers")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("UltimosDigitosCartao");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DataTransacao");
 
-                    b.Property<DateTime>("Disapproval")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime?>("Disapproval")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DataReprovacao");
 
                     b.Property<decimal>("FixedRate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("TaxaFixa");
 
                     b.Property<int>("InstallmentsNumber")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("NumeroParcelas");
 
                     b.Property<decimal>("NetValue")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("ValorLiquido");
 
-                    b.HasKey("NSU");
+                    b.HasKey("Nsu");
 
-                    b.ToTable("Transactions");
+                    b.ToTable("Transaction", (string)null);
+                });
+
+            modelBuilder.Entity("api.Models.EntityModel.AnticipationTransaction", b =>
+                {
+                    b.HasOne("api.Models.EntityModel.Anticipation", "Anticipation")
+                        .WithMany("AnticipationTransactions")
+                        .HasForeignKey("AnticipationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Anticipation");
                 });
 
             modelBuilder.Entity("api.Models.EntityModel.Installment", b =>
@@ -109,6 +198,11 @@ namespace api.Migrations
                         .IsRequired();
 
                     b.Navigation("Transaction");
+                });
+
+            modelBuilder.Entity("api.Models.EntityModel.Anticipation", b =>
+                {
+                    b.Navigation("AnticipationTransactions");
                 });
 
             modelBuilder.Entity("api.Models.EntityModel.Transaction", b =>

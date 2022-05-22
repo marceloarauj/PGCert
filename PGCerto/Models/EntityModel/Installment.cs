@@ -3,7 +3,7 @@
     public class Installment
     {
         public int Id { get; set; }
-        public string NSU { get; set; }
+        public string Nsu { get; set; }
         public Transaction Transaction { get; set; }
         public decimal BruteValue { get; set; }
         public decimal NetValue { get; set; }
