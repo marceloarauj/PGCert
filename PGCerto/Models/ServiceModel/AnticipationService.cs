@@ -33,7 +33,7 @@ namespace api.Models.ServiceModel
             };
 
             anticipation.AnticipationTransactions =
-                transactionCodes.Select(transactionCode => new AnticipationTransaction { TransactionNsu = transactionCode }).ToList();
+                transactions.Select(transaction => new AnticipationTransaction { TransactionNsu = transaction.Nsu }).ToList();
 
             _context.Anticipations.Add(anticipation);
 
@@ -53,6 +53,8 @@ namespace api.Models.ServiceModel
             anticipation.StartAnalysisDate = DateTime.Now;
 
             _context.Anticipations.Update(anticipation);
+
+            _context.SaveChanges();
 
             return new OkResult();
         }
@@ -92,7 +94,7 @@ namespace api.Models.ServiceModel
             var anticipation = _context.Anticipations.Where
                                         (anticipation => anticipation.Id == anticipationTransaction.AnticipationId).First();
 
-            if (anticipation.Status != null)
+            if (anticipation.Status != null || anticipation.StartAnalysisDate == null)
                 return;
 
             anticipationTransaction.Status = 
@@ -103,7 +105,10 @@ namespace api.Models.ServiceModel
 
             anticipation.AntecipatedValue = _context.Installments.SumAntecipatedValue(anticipationTransaction.TransactionNsu);
 
-            anticipation.Status = _context.AnticipationTransactions.StatusById(anticipation.Id);
+            anticipation.Status = _context.AnticipationTransactions.StatusById(anticipation.Id, anticipationTransaction);
+
+            if (anticipation.Status != null)
+                anticipation.FinishedAnalysisDate = DateTime.Now;
 
             _context.AnticipationTransactions.Update(anticipationTransaction);
             _context.Anticipations.Update(anticipation);

@@ -10,12 +10,12 @@
             return anticipationTransactions.Any(anticipationTransaction => transactions.Contains(anticipationTransaction.TransactionNsu));
         }
 
-        public static AnticipationStatus? StatusById(this IQueryable<AnticipationTransaction> anticipationTransactions, int id)
+        public static AnticipationStatus? StatusById(this IQueryable<AnticipationTransaction> anticipationTransactions, int id, AnticipationTransaction actual)
         {
             var transactions = anticipationTransactions
                                     .Where(anticipationTransactions => anticipationTransactions.AnticipationId == id);
 
-            var existTransactionNotEvaluated = transactions.Any(transaction => transaction.Status == null);
+            var existTransactionNotEvaluated = transactions.Any(transaction => transaction.Status == null && actual.TransactionNsu != transaction.TransactionNsu);
 
             if (existTransactionNotEvaluated)
                 return null;

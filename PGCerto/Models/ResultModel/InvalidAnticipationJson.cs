@@ -10,7 +10,7 @@ namespace api.Models.ResultModel
             var objectResult = new ObjectResult(Error);
             objectResult.StatusCode = StatusCodes.Status406NotAcceptable;
 
-            return objectResult.ExecuteResultAsync(context);
+            return  objectResult.ExecuteResultAsync(context);
         }
     }
 }

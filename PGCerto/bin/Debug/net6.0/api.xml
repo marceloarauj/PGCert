@@ -6,7 +6,7 @@
     <members>
         <member name="M:api.Controllers.AnticipationController.PendingAnalysis">
             <summary>
-            Visualização de antecipações pendentes
+            Anticipation with analysis pending
             </summary>
             <returns></returns>
         </member>

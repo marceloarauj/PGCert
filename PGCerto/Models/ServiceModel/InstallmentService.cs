@@ -43,6 +43,7 @@ namespace api.Models.ServiceModel
             }
 
             _context.UpdateRange(installments);
+            _context.SaveChanges();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace api.Controllers
         }
 
         /// <summary>
-        /// Visualização de antecipações pendentes
+        /// Anticipation with analysis pending
         /// </summary>
         /// <returns></returns>
         [HttpGet("pending")]
@@ -40,9 +40,9 @@ namespace api.Controllers
         }
 
         [HttpPost("request")]
-        public IActionResult AnticipationRequest( [MinLength(1)] List<string> transactionCodes)
+        public IActionResult AnticipationRequest(AnticipationRequestModel anticipationRequest)
         {
-            return _anticipationService.CreateAnticipation(transactionCodes);
+            return _anticipationService.CreateAnticipation(anticipationRequest.TransactionCodes);
         }
 
         [HttpGet("attendance/start/{id}")]
@@ -52,11 +52,11 @@ namespace api.Controllers
         }
 
         [HttpPut("attendance/evaluation")]
-        public IActionResult AttendanceEvaluation(List<AnticipationEvaluateModel> evaluations)
+        public IActionResult AttendanceEvaluation(AttendanceEvaluationModel attendanceEvaluationModel)
         {
-            if (!evaluations.Any()) return new EmptyAnticipationEvaluateJson();
+            if (!attendanceEvaluationModel.Evaluations.Any()) return new EmptyAnticipationEvaluateJson();
 
-            return _anticipationService.AttendanceEvaluation(evaluations);
+            return _anticipationService.AttendanceEvaluation(attendanceEvaluationModel.Evaluations);
         }
 
         /// <summary>
