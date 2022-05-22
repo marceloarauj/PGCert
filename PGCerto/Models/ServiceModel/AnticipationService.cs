@@ -78,8 +78,6 @@ namespace api.Models.ServiceModel
         {
             evaluations.ForEach(evaluation => UpdateAnticipationEvaluationData(evaluation));
 
-            _context.SaveChanges();
-
             return new OkResult();
         } 
 
@@ -94,14 +92,23 @@ namespace api.Models.ServiceModel
             var anticipation = _context.Anticipations.Where
                                         (anticipation => anticipation.Id == anticipationTransaction.AnticipationId).First();
 
+            if (anticipation.Status != null)
+                return;
+
             anticipationTransaction.Status = 
                     evaluation.Status == AnticipationEvaluateStatus.Approved ? Status.Approved : Status.Reproved;
 
             if(anticipationTransaction.Status == Status.Approved)
                 _installmentService.UpdateInstallmentAfterAnticipation(anticipationTransaction.TransactionNsu);
 
-            _context.AnticipationTransactions.Update(anticipationTransaction);
+            anticipation.AntecipatedValue = _context.Installments.SumAntecipatedValue(anticipationTransaction.TransactionNsu);
 
+            anticipation.Status = _context.AnticipationTransactions.StatusById(anticipation.Id);
+
+            _context.AnticipationTransactions.Update(anticipationTransaction);
+            _context.Anticipations.Update(anticipation);
+            
+            _context.SaveChanges();
         }
     }
 }
