@@ -11,7 +11,7 @@ Bibliotecas:
 
 - Como a chave NSU é única, considerei ela como chave primária
 
-- Na data de aprovação ou reprovação considerei da transação a data atual (fiquei em dúvida se o vendedor informava ou não)
+- Na data de aprovação ou reprovação da transação considerei a data atual (fiquei em dúvida se o vendedor informava ou não)
 
 - Considerei a reprovação somente quando o cartão era 5999 (não sabia quais seriam outros casos para reprovação, maior parte dos dados passavam pelas validations)
 
